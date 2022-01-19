@@ -1,0 +1,132 @@
+Sub Frequencia_Planos()
+
+
+Dim w As Worksheet
+Dim nRows As Long
+
+Set w = Sheets("Planilha1")
+
+nRows = w.Cells(w.Rows.Count, 1).End(xlUp).Row
+
+
+
+If Not IsObject(app) Then
+   Set SapGuiAuto = GetObject("SAPGUI")
+   Set app = SapGuiAuto.GetScriptingEngine
+End If
+If Not IsObject(Connection) Then
+   Set Connection = app.Children(0)
+End If
+If Not IsObject(session) Then
+   Set session = Connection.Children(0)
+End If
+If IsObject(WScript) Then
+   WScript.ConnectObject session, "on"
+   WScript.ConnectObject app, "on"
+End If
+session.findById("wnd[0]").maximize
+session.findById("wnd[0]/tbar[0]/okcd").Text = "IP42"
+session.findById("wnd[0]").sendVKey 0
+
+'3 abaixo indica a partir de qual linha começa os dados para preenchimento
+For i = 3 To nRows
+    session.findById("wnd[0]/usr/cmbRMIPM-MPTYP").Key = "NO"
+    session.findById("wnd[0]/usr/ctxtRMIPM-WSTRA").SetFocus
+    session.findById("wnd[0]/usr/ctxtRMIPM-WSTRA").caretPosition = 0
+    session.findById("wnd[0]").sendVKey 4
+    session.findById("wnd[1]/usr/lbl[1,4]").SetFocus
+    session.findById("wnd[1]/usr/lbl[1,4]").caretPosition = 3
+    session.findById("wnd[1]").sendVKey 2
+    session.findById("wnd[0]").sendVKey 0
+    session.findById("wnd[0]/usr/subSUBSCREEN_HEAD:SAPLIWP3:6000/txtRMIPM-WPTXT").Text = w.Range("A" & i).Value
+    session.findById("wnd[0]/usr/subSUBSCREEN_MITEM:SAPLIWP3:8002/tabsTABSTRIP_ITEM/tabpT\11/ssubSUBSCREEN_BODY2:SAPLIWP3:8022/subSUBSCREEN_ITEM_1:SAPLIWO1:0100/ctxtRIWO1-TPLNR").Text = w.Range("B" & i).Value
+    session.findById("wnd[0]/usr/subSUBSCREEN_MITEM:SAPLIWP3:8002/tabsTABSTRIP_ITEM/tabpT\11/ssubSUBSCREEN_BODY2:SAPLIWP3:8022/subSUBSCREEN_ITEM_1:SAPLIWO1:0100/ctxtRIWO1-EQUNR").Text = w.Range("C" & i).Value
+    session.findById("wnd[0]/usr/subSUBSCREEN_MITEM:SAPLIWP3:8002/tabsTABSTRIP_ITEM/tabpT\11/ssubSUBSCREEN_BODY2:SAPLIWP3:8022/subSUBSCREEN_ITEM_2:SAPLIWP3:0502/ctxtRMIPM-QMART").Text = w.Range("E" & i).Value
+    session.findById("wnd[0]/usr/subSUBSCREEN_MITEM:SAPLIWP3:8002/tabsTABSTRIP_ITEM/tabpT\11/ssubSUBSCREEN_BODY2:SAPLIWP3:8022/subSUBSCREEN_ITEM_2:SAPLIWP3:0502/ctxtRMIPM-GEWERK").Text = w.Range("F" & i).Value
+    session.findById("wnd[0]/usr/subSUBSCREEN_MITEM:SAPLIWP3:8002/tabsTABSTRIP_ITEM/tabpT\11/ssubSUBSCREEN_BODY2:SAPLIWP3:8022/subSUBSCREEN_ITEM_1:SAPLIWO1:0100/txtRIWO1-BAUTX").SetFocus
+    session.findById("wnd[0]/usr/subSUBSCREEN_MITEM:SAPLIWP3:8002/tabsTABSTRIP_ITEM/tabpT\11/ssubSUBSCREEN_BODY2:SAPLIWP3:8022/subSUBSCREEN_ITEM_1:SAPLIWO1:0100/txtRIWO1-BAUTX").caretPosition = 0
+    session.findById("wnd[0]").sendVKey 0
+    session.findById("wnd[1]/usr/btnSPOP-OPTION2").press
+    session.findById("wnd[0]/usr/subSUBSCREEN_MITEM:SAPLIWP3:8002/tabsTABSTRIP_ITEM/tabpT\11/ssubSUBSCREEN_BODY2:SAPLIWP3:8022/subSUBSCREEN_ITEM_2:SAPLIWP3:0502/ctxtRMIPM-WPGRP").Text = w.Range("G" & i).Value
+    session.findById("wnd[0]/usr/subSUBSCREEN_MITEM:SAPLIWP3:8002/tabsTABSTRIP_ITEM/tabpT\11/ssubSUBSCREEN_BODY2:SAPLIWP3:8022/subSUBSCREEN_ITEM_2:SAPLIWP3:0502/cmbRMIPM-PRIOK").Key = w.Range("H" & i).Value
+    session.findById("wnd[0]/usr/subSUBSCREEN_MITEM:SAPLIWP3:8002/tabsTABSTRIP_ITEM/tabpT\11/ssubSUBSCREEN_BODY2:SAPLIWP3:8022/subSUBSCREEN_ITEM_2:SAPLIWP3:0502/txtRILA0-KTEXT").SetFocus
+    session.findById("wnd[0]/usr/subSUBSCREEN_MITEM:SAPLIWP3:8002/tabsTABSTRIP_ITEM/tabpT\11/ssubSUBSCREEN_BODY2:SAPLIWP3:8022/subSUBSCREEN_ITEM_2:SAPLIWP3:0502/txtRILA0-KTEXT").caretPosition = 26
+    session.findById("wnd[0]/usr/subSUBSCREEN_MPLAN:SAPLIWP3:8001/tabsTABSTRIP_HEAD/tabpT\02").Select
+    session.findById("wnd[0]/usr/subSUBSCREEN_MPLAN:SAPLIWP3:8001/tabsTABSTRIP_HEAD/tabpT\02/ssubSUBSCREEN_BODY1:SAPLIWP3:8012/subSUBSCREEN_PARAMETER:SAPLIWP3:0115/txtRMIPM-VSPOS").Text = w.Range("I" & i).Value
+    session.findById("wnd[0]/usr/subSUBSCREEN_MPLAN:SAPLIWP3:8001/tabsTABSTRIP_HEAD/tabpT\02/ssubSUBSCREEN_BODY1:SAPLIWP3:8012/subSUBSCREEN_PARAMETER:SAPLIWP3:0115/txtRMIPM-VSNEG").Text = w.Range("J" & i).Value
+    session.findById("wnd[0]/usr/subSUBSCREEN_MPLAN:SAPLIWP3:8001/tabsTABSTRIP_HEAD/tabpT\02/ssubSUBSCREEN_BODY1:SAPLIWP3:8012/subSUBSCREEN_PARAMETER:SAPLIWP3:0115/txtRMIPM-HORIZ").Text = w.Range("K" & i).Value
+    session.findById("wnd[0]/usr/subSUBSCREEN_MPLAN:SAPLIWP3:8001/tabsTABSTRIP_HEAD/tabpT\02/ssubSUBSCREEN_BODY1:SAPLIWP3:8012/subSUBSCREEN_PARAMETER:SAPLIWP3:0115/txtRMIPM-ABRHO").Text = w.Range("L" & i).Value
+    session.findById("wnd[0]/usr/subSUBSCREEN_MPLAN:SAPLIWP3:8001/tabsTABSTRIP_HEAD/tabpT\02/ssubSUBSCREEN_BODY1:SAPLIWP3:8012/subSUBSCREEN_PARAMETER:SAPLIWP3:0115/ctxtRMIPM-HUNIT").Text = w.Range("M" & i).Value
+    session.findById("wnd[0]/usr/subSUBSCREEN_MPLAN:SAPLIWP3:8001/tabsTABSTRIP_HEAD/tabpT\02/ssubSUBSCREEN_BODY1:SAPLIWP3:8012/subSUBSCREEN_PARAMETER:SAPLIWP3:0115/ctxtRMIPM-HUNIT").SetFocus
+    session.findById("wnd[0]/usr/subSUBSCREEN_MPLAN:SAPLIWP3:8001/tabsTABSTRIP_HEAD/tabpT\02/ssubSUBSCREEN_BODY1:SAPLIWP3:8012/subSUBSCREEN_PARAMETER:SAPLIWP3:0115/ctxtRMIPM-HUNIT").caretPosition = 3
+    session.findById("wnd[0]").sendVKey 0
+    session.findById("wnd[0]/usr/subSUBSCREEN_MITEM:SAPLIWP3:8002/tabsTABSTRIP_ITEM/tabpT\11/ssubSUBSCREEN_BODY2:SAPLIWP3:8022/subSUBSCREEN_ITEM_2:SAPLIWP3:0502/btnARBEITSPLAN_1").press
+    session.findById("wnd[1]/tbar[0]/btn[0]").press
+    session.findById("wnd[0]").sendVKey 0
+    session.findById("wnd[0]/usr/ctxtPLKOD-VERWE").SetFocus
+    session.findById("wnd[0]/usr/ctxtPLKOD-VERWE").caretPosition = 0
+    session.findById("wnd[0]").sendVKey 4
+    session.findById("wnd[1]/usr/lbl[1,6]").SetFocus
+    session.findById("wnd[1]/usr/lbl[1,6]").caretPosition = 1
+    session.findById("wnd[1]").sendVKey 2
+    session.findById("wnd[0]/usr/ctxtPLKOD-VAGRP").SetFocus
+    session.findById("wnd[0]/usr/ctxtPLKOD-VAGRP").caretPosition = 0
+    session.findById("wnd[0]").sendVKey 4
+    session.findById("wnd[1]/usr/lbl[1,9]").SetFocus
+    session.findById("wnd[1]/usr/lbl[1,9]").caretPosition = 1
+    session.findById("wnd[1]").sendVKey 2
+    session.findById("wnd[0]/usr/ctxtPLKOD-STATU").SetFocus
+    session.findById("wnd[0]/usr/ctxtPLKOD-STATU").caretPosition = 0
+    session.findById("wnd[0]").sendVKey 4
+    session.findById("wnd[1]/usr/lbl[1,6]").SetFocus
+    session.findById("wnd[1]/usr/lbl[1,6]").caretPosition = 1
+    session.findById("wnd[1]").sendVKey 2
+    session.findById("wnd[0]").sendVKey 0
+    session.findById("wnd[0]/usr/tblSAPLCPDITCTRL_3400/txtPLPOD-LTXA1[5,0]").Text = w.Range("Q" & i).Value
+    session.findById("wnd[0]/usr/tblSAPLCPDITCTRL_3400/ctxtPLPOD-ARBEH[8,0]").Text = w.Range("R" & i).Value
+    session.findById("wnd[0]/usr/tblSAPLCPDITCTRL_3400/txtPLPOD-ANZZL[9,0]").Text = w.Range("S" & i).Value
+    session.findById("wnd[0]/usr/tblSAPLCPDITCTRL_3400/txtPLPOD-DAUNO[10,0]").Text = w.Range("T" & i).Value
+    session.findById("wnd[0]/usr/tblSAPLCPDITCTRL_3400/ctxtPLPOD-DAUNE[11,0]").Text = w.Range("U" & i).Value
+    session.findById("wnd[0]/usr/tblSAPLCPDITCTRL_3400/ctxtPLPOD-INDET[12,0]").Text = w.Range("V" & i).Value
+    session.findById("wnd[0]/usr/tblSAPLCPDITCTRL_3400/ctxtPLPOD-INDET[12,0]").SetFocus
+    session.findById("wnd[0]/usr/tblSAPLCPDITCTRL_3400/ctxtPLPOD-INDET[12,0]").caretPosition = 1
+    session.findById("wnd[0]").sendVKey 0
+    session.findById("wnd[0]").sendVKey 0
+    session.findById("wnd[0]/usr/tblSAPLCPDITCTRL_3400").getAbsoluteRow(0).Selected = True
+    session.findById("wnd[0]/usr/tblSAPLCPDITCTRL_3400/txtPLPOD-VORNR[0,0]").SetFocus
+    session.findById("wnd[0]/usr/tblSAPLCPDITCTRL_3400/txtPLPOD-VORNR[0,0]").caretPosition = 0
+    session.findById("wnd[0]/usr/btnTEXT_DRUCKTASTE_WP").press
+    
+    'Lista das Frequencias dos Planos
+    session.findById("wnd[0]/usr/tblSAPLCPDITCTRL_3600/chkRIHSTRAT-MARK01[3,0]").Selected = w.Range("Y" & i).Value
+    session.findById("wnd[0]/usr/tblSAPLCPDITCTRL_3600/chkRIHSTRAT-MARK02[4,0]").Selected = w.Range("Z" & i).Value
+    session.findById("wnd[0]/usr/tblSAPLCPDITCTRL_3600/chkRIHSTRAT-MARK03[5,0]").Selected = w.Range("AA" & i).Value
+    session.findById("wnd[0]/usr/tblSAPLCPDITCTRL_3600/chkRIHSTRAT-MARK04[6,0]").Selected = w.Range("AB" & i).Value
+    session.findById("wnd[0]/usr/tblSAPLCPDITCTRL_3600/chkRIHSTRAT-MARK05[7,0]").Selected = w.Range("AC" & i).Value
+    session.findById("wnd[0]/usr/tblSAPLCPDITCTRL_3600/chkRIHSTRAT-MARK06[8,0]").Selected = w.Range("AD" & i).Value
+    session.findById("wnd[0]/usr/tblSAPLCPDITCTRL_3600/chkRIHSTRAT-MARK07[9,0]").Selected = w.Range("AE" & i).Value
+    session.findById("wnd[0]/usr/tblSAPLCPDITCTRL_3600/chkRIHSTRAT-MARK08[10,0]").Selected = w.Range("AF" & i).Value
+    session.findById("wnd[0]/usr/tblSAPLCPDITCTRL_3600/chkRIHSTRAT-MARK09[11,0]").Selected = w.Range("AG" & i).Value
+    session.findById("wnd[0]/usr/tblSAPLCPDITCTRL_3600/chkRIHSTRAT-MARK10[12,0]").Selected = w.Range("AH" & i).Value
+    session.findById("wnd[0]/usr/tblSAPLCPDITCTRL_3600/chkRIHSTRAT-MARK11[13,0]").Selected = w.Range("AI" & i).Value
+    session.findById("wnd[0]/usr/tblSAPLCPDITCTRL_3600/chkRIHSTRAT-MARK12[14,0]").Selected = w.Range("AJ" & i).Value
+    session.findById("wnd[0]/usr/tblSAPLCPDITCTRL_3600/chkRIHSTRAT-MARK13[15,0]").Selected = w.Range("AK" & i).Value
+    session.findById("wnd[0]/usr/tblSAPLCPDITCTRL_3600/chkRIHSTRAT-MARK14[16,0]").Selected = w.Range("AL" & i).Value
+    session.findById("wnd[0]/usr/tblSAPLCPDITCTRL_3600/chkRIHSTRAT-MARK15[17,0]").Selected = w.Range("AM" & i).Value
+    session.findById("wnd[0]/usr/tblSAPLCPDITCTRL_3600/chkRIHSTRAT-MARK16[18,0]").Selected = w.Range("AN" & i).Value
+    session.findById("wnd[0]/usr/tblSAPLCPDITCTRL_3600/chkRIHSTRAT-MARK16[18,0]").SetFocus
+    
+    session.findById("wnd[0]/tbar[0]/btn[3]").press
+    session.findById("wnd[0]/tbar[0]/btn[3]").press
+    session.findById("wnd[0]/tbar[0]/btn[11]").press
+    session.findById("wnd[0]/tbar[0]/btn[11]").press
+    session.findById("wnd[1]/usr/radSTART_VALUE_NO").SetFocus
+    session.findById("wnd[1]/usr/radSTART_VALUE_NO").Select
+    session.findById("wnd[1]/tbar[0]/btn[0]").press
+    
+    
+Next
+    
+    MsgBox "Cadastros realizado com sucesso!"
+
+End Sub
